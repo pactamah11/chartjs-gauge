@@ -2,7 +2,7 @@ import {DoughnutController} from 'chart.js';
 import {version} from '../package.json';
 
 const {
-  toPercentage, 
+  toPercentage,
   toDimension,
   toRadians,
   addRoundedRectPath,
@@ -39,7 +39,7 @@ function getRatioAndOffset( rotation, circumference, cutout, needleOpts ) {
     const maxY = calcMax( HALF_PI, startY, endY );
     const minX = calcMin( PI, startX, endX );
     const minY = calcMin( PI + HALF_PI, startY, endY );
-    
+
     ratioX = ( maxX - minX ) / 2;
     ratioY = ( maxY - minY ) / 2;
     offsetX = -( maxX + minX ) / 2;
@@ -57,7 +57,7 @@ export default class GaugeController extends DoughnutController {
     meta.minValue = dataset.minValue || 0;
     meta.value = dataset.value;
   }
-  
+
   /**
 	 * @param {string} mode
 	 */
@@ -176,7 +176,7 @@ export default class GaugeController extends DoughnutController {
         return TAU * ( Math.abs( value - minCircumference ) / total );
     }
     return 0;
-  }  
+  }
 
   getTranslation( chart ) {
     const { chartArea } = chart;
@@ -185,7 +185,7 @@ export default class GaugeController extends DoughnutController {
     const dx = ( centerX + this.offsetX || 0 );
     const dy = ( centerY + this.offsetY || 0 );
     return { dx, dy };
-  } 
+  }
 
   drawNeedle() {
     const {
@@ -214,7 +214,7 @@ export default class GaugeController extends DoughnutController {
     // interpolate
     const meta = this._cachedMeta;
     const circumference = this._getCircumference();
-    const rotation = this._getRotation();    
+    const rotation = this._getRotation();
     var angle = this.calculateCircumference( meta.value * circumference / TAU ) + rotation;
 
 // draw
@@ -317,10 +317,13 @@ export default class GaugeController extends DoughnutController {
 
   draw() {
     super.draw();
-    this.drawNeedle();
-/*    
+
+    if (this.options.needle.display) {
+      this.drawNeedle();
+    }
+/*
     this.drawValueLabel();
-*/    
+*/
   }
 
 }
@@ -331,6 +334,8 @@ GaugeController.version = version;
 
 GaugeController.overrides = {
   needle: {
+    // Needle display
+    display: true,
     // Needle circle radius as the percentage of the chart area width
     radiusPercentage: 2,
     // Needle width as the percentage of the chart area width
